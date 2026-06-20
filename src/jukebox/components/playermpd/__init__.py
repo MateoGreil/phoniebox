@@ -302,6 +302,15 @@ class PlayerMPD:
             del self.mpd_status['volume']
         except KeyError:
             pass
+
+        current_file = self.mpd_status.get('file', '')
+        if (current_file.startswith(('http://', 'https://', 'ftp://'))
+                and not self.mpd_status.get('title')):
+            folder = (self.music_player_status['player_status'].get('last_played_folder') or '').rstrip('/')
+            folder_name = os.path.basename(folder)
+            if folder_name:
+                self.mpd_status['title'] = folder_name
+
         publishing.get_publisher().send('playerstatus', self.mpd_status)
 
     # MPD can play absolute paths but can find songs in its database only by relative path
