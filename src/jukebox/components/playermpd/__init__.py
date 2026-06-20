@@ -277,8 +277,9 @@ class PlayerMPD:
         this method polls the status from mpd and stores the important inforamtion in the music_player_status,
         it will repeat itself in the intervall specified by self.mpd_status_poll_interval
         """
-        self.mpd_status.update(self.mpd_retry_with_mutex(self.mpd_client.status))
-        self.mpd_status.update(self.mpd_retry_with_mutex(self.mpd_client.currentsong))
+        status = self.mpd_retry_with_mutex(self.mpd_client.status)
+        status.update(self.mpd_retry_with_mutex(self.mpd_client.currentsong))
+        self.mpd_status = status
 
         if self.mpd_status.get('elapsed') is not None:
             self.current_folder_status["ELAPSED"] = self.mpd_status['elapsed']
