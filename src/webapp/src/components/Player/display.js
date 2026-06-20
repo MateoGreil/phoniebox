@@ -17,6 +17,16 @@ const Display = () => {
     textOverflow: 'ellipsis',
   };
 
+  const file = playerstatus?.file || '';
+  const fileName = file.split('/').pop().split('?')[0];
+  const stationName =
+    playerstatus?.name && playerstatus.name !== fileName && playerstatus.name !== playerstatus?.title
+      ? playerstatus.name
+      : null;
+  const subtitle = [playerstatus?.artist || stationName, playerstatus?.album]
+    .filter(Boolean)
+    .join(' • ');
+
   return (
     <Grid container>
       <Typography sx={dontBreak} component="h5" variant="h5">
@@ -26,9 +36,7 @@ const Display = () => {
         }
       </Typography>
       <Typography sx={dontBreak} variant="subtitle1" color="textSecondary">
-        {playerstatus?.songid && (playerstatus?.artist || t('player.display.unknown-artist')) }
-        <span sx={{ marginLeft: '5px', marginRight: '5px' }}>&bull;</span>
-        {playerstatus?.songid && (playerstatus?.album || playerstatus?.file) }
+        {playerstatus?.songid && subtitle}
       </Typography>
     </Grid>
   );
